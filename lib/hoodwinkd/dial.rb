@@ -193,7 +193,7 @@ module Hoodwinkd::Views
             function editDomain() {
                 var domain = $F('domain');
                 domain = domain.replace( /^www\.(.*)$/, '$1' );
-                window.location = "#{URL('/dial/site/')}"+domain;
+                window.location = '/dial/site/' + domain;
                 return false;
             }
         END
@@ -446,9 +446,9 @@ module Hoodwinkd::Views
                 div.optional do
                     label 'Full Post URL Regexp:', :for => 'layer[fullpost_url_match]'
                     input :type => 'text', :name => 'layer[fullpost_url_match]', :value => @layer.fullpost_url_match
-                    small { red "Describe the regexp for the a post's permanent URL.  Regexp is not partial,
+                    small { red 'Describe the regexp for the a post\'s permanent URL.  Regexp is not partial,
                                  beginning and end markers are implied.
-                                 Example: @/\d+/\d+/\d+/[\w-]+\.html@." }
+                                 Example: @/\\d+/\\d+/\\d+/[\\w-]+\.html@.' }
                 end
                 div.optional do
                     label 'Full Post Query Variables:', :for => 'layer[fullpost_qvars]'
