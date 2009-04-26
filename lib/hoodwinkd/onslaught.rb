@@ -7,7 +7,7 @@ module Hoodwinkd::Controllers
             @top_winkers = User.most_active(10)
             @newest_sites = Site.latest(20)
             @users, @winks, @posts = User.count, Wink.count, Post.count
-            render :onslaught, 'onslaught of the hoodwink.d underground', :index
+            render :onslaught, 'onslaught of the hornswaggl.d underground', :index
         end
     end
     class OnslaughtSearch < R '/onslaught/search'
@@ -16,7 +16,7 @@ module Hoodwinkd::Controllers
         end
         def post
             @search_title, @winks = Wink.search_for @input.q
-            render :onslaught, "hoodwink.d: #{@search_title}", :search
+            render :onslaught, "hornswaggl.d: #{@search_title}", :search
         end
     end
     class OnslaughtSearchXml < R '/onslaught/search.xml'
@@ -68,8 +68,8 @@ module Hoodwinkd::Views
         end
         div.sidebar! do
             self << %{
-                <h2>recent stuff <a href="http://hoodwink.d/onslaught/latest-posts.xml"><img src="/i/feed-icon-12x12.png" border="0" /></a></h2>
-                <p style="margin: 0px 2px 4px 2px; color: #999; font-size: 7pt;">hoodwink.d and wasteland winks have <a href="#meta-discussion">moved</a>.</p>
+                <h2>recent stuff <a href="http://hornswaggl.d/onslaught/latest-posts.xml"><img src="/i/feed-icon-12x12.png" border="0" /></a></h2>
+                <p style="margin: 0px 2px 4px 2px; color: #999; font-size: 7pt;">hornswaggl.d and wasteland winks have <a href="#meta-discussion">moved</a>.</p>
             }
             onslaught_posts @recent_posts
         end
@@ -158,15 +158,15 @@ module Hoodwinkd::Views
 
     def onslaught_search_xml
         rss2_0 do |c|
-            c.title "hoodwink'd .. #{ @search_title }"
-            c.link "http://hoodwink.d/onslaught/search?q=#{ @input.q }"
+            c.title "hornswaggl'd .. #{ @search_title }"
+            c.link "http://hornswaggl.d/onslaught/search?q=#{ @input.q }"
             c.description "together we are unintentionally making a perfect shark shadow on the basement wall!"
             @winks.each do |post|
             c.item do |item|
                 link = "http://#{ post.real_domain }#{ post.permalink }#wink-#{ post.id }"
                 item.title post.title
                 item.link link
-                item.guid "wink-#{ post.id }@http://hoodwink.d", "isPermaLink" => false
+                item.guid "wink-#{ post.id }@http://hornswaggl.d", "isPermaLink" => false
                 item.dc :creator, post.login
                 item.dc :date, post.created_at
                 item.description post.comment_html

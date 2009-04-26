@@ -41,7 +41,7 @@ module Hoodwinkd::Views
                     end
                     h1 @site.domain
                     h3 "winked over since #{@site.created_at}"
-                    h4 "#[@site.wink_count] winks -- an average of #[@site.wink_avg] winks each day"
+                    h4 "#{@site.wink_count} winks -- an average of #{@site.wink_avg} winks each day"
                 end
                 div.content! do
                     div.blog! do
@@ -84,7 +84,7 @@ module Hoodwinkd::Views
                     end
                     div.footer! do
                         div.box do
-                            h3 "hoodwink.d"
+                            h3 "hornswaggl.d"
                             div.pendingSites! do
                             end
                         end
@@ -146,7 +146,7 @@ module Hoodwinkd::Views
                     end
                     div.footer! do
                         div.box do
-                            h3 "hoodwink.d"
+                            h3 "hornswaggl.d"
                             div.pendingSites! do
                             end
                         end

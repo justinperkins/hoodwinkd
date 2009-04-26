@@ -90,7 +90,7 @@ module Hoodwinkd::Helpers
             smtp.send_message <<MSG, 'why@hobix.com', user.email
 From: why the lucky stiff <why@hobix.com>
 To: #{ user.login } <#{ user.email }>
-Subject: your hoodwink.d account
+Subject: your hornswaggl.d account
 
 Hi, here's your lost password: #{ decrypt( user.security_token, user.password ) }
 

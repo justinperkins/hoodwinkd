@@ -3,7 +3,7 @@ $: << File.expand_path("../../lib", __FILE__)
 require 'hoodwinkd'
 require 'uri'
 require 'fcgi'
-Dir.chdir('/home/sites/hoodwink.d/public')
+Dir.chdir('/home/sites/hornswaggl.d/public')
 Hoodwinkd.connect '../config/database.yml'
 Hoodwinkd.create if Hoodwinkd.respond_to? :create
 FCGI.each do |req|

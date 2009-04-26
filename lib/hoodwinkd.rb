@@ -41,7 +41,7 @@ def Hoodwinkd.connect dbfile
     ::SALT.replace conf['salt']
     Hoodwinkd::Models::Base.establish_connection(conf)
     Hoodwinkd::Models::Base.logger = Logger.new('camping.log') if $DEBUG
-    Hoodwinkd::Models::Base.threaded_connections=false
+    #Hoodwinkd::Models::Base.threaded_connections=false
     Hoodwinkd::Models::Base.verification_timeout = 14400 if conf['adapter'] == 'mysql'
 end
 

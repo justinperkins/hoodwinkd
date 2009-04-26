@@ -259,7 +259,7 @@ module Hoodwinkd::Views
             self << red(<<-END)
                 h1. Login
 
-                Wonderful!  Now you have your own *Hoodwink.d* satellite office, a branch of 
+                Wonderful!  Now you have your own *Hornswaggl.d* satellite office, a branch of 
                 the underground mumbler's club.
             END
             errors_for @user
@@ -282,17 +282,17 @@ module Hoodwinkd::Views
         self << red(<<-END)
             h1. Welcome, #{@user.login}
 
-            You joined winkerland on <notextile>#{js_time @user.created_at, 'Day'}</notextile>.
+            You joined swaggleland on <notextile>#{js_time @user.created_at, 'Day'}</notextile>.
 
-            Hoodwink.d is a travelling commentary overlay.  When you visit blogs and websites which have
-            been dialed into Hoodwink.d, you'll see the commentary of your fellow winkers.  You are
+            Hornswaggl.d is a travelling commentary overlay.  When you visit blogs and websites which have
+            been dialed into Hornswaggl.d, you'll see the commentary of your fellow winkers.  You are
             currently logged into a sattelite office, a subsect of winkers.  For information about
-            the central Hoodwink.d conduits, hit the "hoodwink.d information 
+            the central Hornswaggl.d conduits, hit the "hornswaggl.d information 
             booth":http://hoodwinkd.hobix.com.
 
             h1. Setting up
 
-            Currently, the best way to use Hoodwink'd is through Greasemonkey.  Here's how:
+            Currently, the best way to use Hornswaggl'd is through Greasemonkey.  Here's how:
 
             # Install "Firefox":http://mozilla.org.
             # Install the latest "Greasemonkey":http://greasemonkey.mozdev.org.
@@ -345,7 +345,7 @@ module Hoodwinkd::Views
                     n = 'profile[theme_css]'
                     label 'Theme CSS:', :for => n
                     input :id => n, :name => n, :type => 'text', :value => @user.theme_css
-                    small { red %{If you'd like to override just the CSS for the above theme or the default hoodwink.d theme.} }
+                    small { red %{If you'd like to override just the CSS for the above theme or the default hornswaggl.d theme.} }
                 end
                 div.optional do
                     n = 'profile[nameplate]'

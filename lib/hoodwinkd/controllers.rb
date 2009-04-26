@@ -97,6 +97,7 @@ module Hoodwinkd::Controllers
         def post(domain, permalink)
             @user = User.find_by_login @input.hoodwink_login
             @permalink = url_canonize(permalink, @env['QUERY_STRING'])
+            r 302, '', 'Location' => "http://#{ domain }#{ @permalink }" unless @user
             pass_in = decrypt( @user.security_token, @input.hoodwink_passc[32,32], @input.hoodwink_passc[0,32] )
             if pass_in == decrypt( @user.security_token, @user.password )
                 layer = Site.find_setup(domain).first

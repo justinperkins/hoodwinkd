@@ -88,6 +88,15 @@ module Hoodwinkd::Models
                   AND w.user_id = u.id AND s.id = ?
                 ORDER BY w.created_at DESC LIMIT ?}, self.id, count]
         end
+        
+        def wink_count
+          '##not implemented##'
+        end
+        
+        def wink_avg
+          '##not implemented##'
+        end
+        
         def popular_posts(count)
             Post.find_by_sql [%{
                 SELECT p.*, w.*, u.login
