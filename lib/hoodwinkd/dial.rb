@@ -286,9 +286,7 @@ module Hoodwinkd::Views
 
             Hornswaggl.d is a travelling commentary overlay.  When you visit blogs and websites which have
             been dialed into Hornswaggl.d, you'll see the commentary of your fellow winkers.  You are
-            currently logged into a sattelite office, a subsect of winkers.  For information about
-            the central Hornswaggl.d conduits, hit the "hornswaggl.d information 
-            booth":http://hoodwinkd.hobix.com.
+            currently logged into a sattelite office, a subsect of winkers.  
 
             h1. Setting up
 

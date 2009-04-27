@@ -25,6 +25,11 @@ module Hoodwinkd::Models
           end
         end
       end
+      
+      private
+      def self.quote(string)
+        string.gsub(/\\/, '\&\&').gsub(/'/, "''") 
+      end
     end
 
     class Session < Base
@@ -252,7 +257,7 @@ module Hoodwinkd::Models
             end
             unless terms.empty?
                 search['terms'] = terms.join ' '
-                conditions << "match(w.comment_html) AGAINST (%s)" % [quote( search['terms'] )]
+                conditions << "w.comment_html LIKE '%#{ quote(search['terms']) }%'"
             end
             conditions = conditions.join(' AND ')
             conditions << " GROUP BY w.id ORDER BY w.created_at DESC"
@@ -263,6 +268,7 @@ module Hoodwinkd::Models
                          hoodwinkd_sites s, hoodwinkd_users u %s
                     WHERE w.post_id = p.id AND p.layer_id = l.id AND l.site_id = s.id AND w.user_id = u.id AND s.enabled = 1
                       AND %s" % [joins * ' ', conditions]
+                      
             res = find_by_sql(sqlq)
             name = "winks "
             name << "by #{ search['who'].join ' or ' } " if search.has_key? 'who'

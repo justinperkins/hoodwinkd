@@ -189,6 +189,7 @@ module Hoodwinkd::Views
                 end
             end
         end
+        return if @winks.nil? || @winks.empty?
         div.results! do
             h2 { self << "Matching Winks ";
                 a(:href => R(OnslaughtSearchXml) + "?#{@input.q}") { img :src => '/i/feed-icon-24x24.png' } }
