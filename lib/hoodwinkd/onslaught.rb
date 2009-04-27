@@ -69,7 +69,6 @@ module Hoodwinkd::Views
         div.sidebar! do
             self << %{
                 <h2>recent stuff <a href="http://hornswaggl.d/onslaught/latest-posts.xml"><img src="/i/feed-icon-12x12.png" border="0" /></a></h2>
-                <p style="margin: 0px 2px 4px 2px; color: #999; font-size: 7pt;">hornswaggl.d and wasteland winks have <a href="#meta-discussion">moved</a>.</p>
             }
             onslaught_posts @recent_posts
         end
