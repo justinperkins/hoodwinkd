@@ -840,10 +840,8 @@ if(typeof GM_log === "undefined") {
                 site['permalinks'] = this.permascan( site );
                 site['is_fullpost'] = ( !site['is_summary'] && site['hoodlink'].match( site['archive_re'] ) );
                 if ( site['permalinks'] )
-                  console.log('permalinks')
                     this.jget( this.domain + "/winksum", 'index_html', site );
                 if ( site['is_fullpost'] )
-                  console.log('full post')
                     this.jget( this.domain + "/wink" + site['hoodlink'], 'archive_html', site );
                 this.sites.push(site);
             }
