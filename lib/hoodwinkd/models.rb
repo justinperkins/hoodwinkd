@@ -199,6 +199,9 @@ module Hoodwinkd::Models
                 }, self.id, Time.now - 1.week]
         end
         def self.most_active(count)
+            # note: this query does not work in sqlite due to the use of INTERVAL
+            # be nice and at least return something instead of puking all over the place
+            return [] if Hoodwinkd::Models::Base.connection.adapter_name == 'SQLite'
             find_by_sql %{
                 SELECT u.login, u.created_at, COUNT(*) AS all_winks,
                 SUM(w.created_at > NOW() - INTERVAL 1 DAY) AS new_winks 
@@ -287,6 +290,9 @@ module Hoodwinkd::Models
         has_one :last_wink, :class_name => Wink.name, :foreign_key => 'last_wink_id'
         validates_uniqueness_of :permalink, :scope => 'layer_id'
         def self.incoming_posts(meta)
+            # note: this query does not work with sqlite, therefore, onslaught does not work when running on sqlite
+            # be nice and at least return something instead of puking all over the place
+            return [] if Hoodwinkd::Models::Base.connection.adapter_name == 'SQLite'
             find_by_sql %{
                 SELECT s.domain, IFNULL(s.real_domain, s.domain) AS real_domain,
                     p.permalink, p.wink_count, MAX(w.created_at) AS max_date,
