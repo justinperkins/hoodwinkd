@@ -125,17 +125,17 @@ module Hoodwinkd::Models
                 SELECT s.domain, s.real_domain,
                        COUNT(p.id) AS all_posts, SUM(p.wink_count) AS all_winks
                 FROM hoodwinkd_posts p, hoodwinkd_layers l, hoodwinkd_sites s 
-                WHERE p.layer_id = l.id AND l.site_id = s.id AND s.enabled = 1
+                WHERE p.layer_id = l.id AND l.site_id = s.id AND (s.enabled = 1 OR s.enabled = 't')
                 GROUP BY s.id ORDER BY all_winks DESC LIMIT #{count.to_i}
             }
         end
         def self.latest(count)
             find_by_sql %{
-                SELECT s.*, u.login, s.created_at
-                FROM hoodwinkd_sites s, hoodwinkd_users u, hoodwinkd_layers l, hoodwinkd_posts p
-                WHERE s.enabled = 1 AND s.creator_id = u.id AND l.site_id = s.id AND p.layer_id = l.id
-                  AND p.layer_id IS NOT NULL
-                GROUP BY s.id ORDER BY s.created_at DESC, s.id ASC LIMIT #{count.to_i}
+                SELECT s.*, u.login AS login
+                FROM hoodwinkd_sites s
+                JOIN hoodwinkd_users u ON u.id = s.creator_id
+                WHERE (s.enabled = 1 OR s.enabled = 't') AND s.created_at >= '#{ (Time.now - (24*60*60)).to_s(:db) }'
+                ORDER BY s.created_at DESC LIMIT #{count.to_i}
             }
         end
         def self.globs(domain)
@@ -187,14 +187,14 @@ module Hoodwinkd::Models
                        p.permalink, p.wink_count, s.domain
                 FROM hoodwinkd_winks w, hoodwinkd_posts p, hoodwinkd_layers l, hoodwinkd_sites s
                 WHERE w.post_id = p.id AND p.layer_id = l.id AND l.site_id = s.id AND w.user_id = ?
-                  AND s.enabled = 1 ORDER BY w.created_at DESC LIMIT ?}, self.id, count]
+                  AND (s.enabled = 1 OR s.enabled = 't') ORDER BY w.created_at DESC LIMIT ?}, self.id, count]
         end
         def recent_posts(count)
             Post.find_by_sql [%{
                 SELECT p.*, s.domain, IFNULL(s.real_domain, s.domain) AS real_domain
                 FROM hoodwinkd_winks w, hoodwinkd_posts p, hoodwinkd_layers l, hoodwinkd_sites s
                 WHERE w.post_id = p.id AND p.layer_id = l.id AND l.site_id = s.id AND w.user_id = ?
-                  AND s.enabled = 1 AND w.created_at > ?
+                  AND (s.enabled = 1 OR s.enabled = 't') AND w.created_at > ?
                   GROUP BY p.id ORDER BY w.created_at DESC
                 }, self.id, Time.now - 1.week]
         end
@@ -216,14 +216,16 @@ module Hoodwinkd::Models
         belongs_to :post
         belongs_to :user
         validates_presence_of :comment_plain
-        def self.recent(count)
+        def self.latest(count)
             find_by_sql %{
-                SELECT w.*, s.domain, p.permalink, u.login,
-                       IF(p.title != '', p.title, s.domain) AS title
-                FROM hoodwinkd_winks w, hoodwinkd_layers l, hoodwinkd_posts p, hoodwinkd_sites s, hoodwinkd_users u 
-                WHERE w.post_id = p.id AND p.layer_id = l.id AND l.site_id = s.id AND w.user_id = u.id 
-                  AND s.enabled = 1
-                ORDER BY w.created_at DESC LIMIT 20
+              SELECT w.*, s.domain as domain, p.permalink as permalink, u.login as login, p.title as title
+              FROM hoodwinkd_winks w 
+              JOIN hoodwinkd_users u ON u.id = w.user_id
+              JOIN hoodwinkd_posts p ON p.id = w.post_id
+              JOIN hoodwinkd_layers l ON l.id = p.layer_id
+              JOIN hoodwinkd_sites s ON s.id = l.site_id
+              WHERE (s.enabled = 't' OR s.enabled = 1)
+              ORDER BY w.created_at DESC LIMIT #{ count }
             }
         end
         def self.search_for terms, limit = 20, start = 0
@@ -269,7 +271,7 @@ module Hoodwinkd::Models
                     IFNULL(s.real_domain, s.domain) AS real_domain, u.login, p.title
                     FROM hoodwinkd_winks w, hoodwinkd_posts p, hoodwinkd_layers l,
                          hoodwinkd_sites s, hoodwinkd_users u %s
-                    WHERE w.post_id = p.id AND p.layer_id = l.id AND l.site_id = s.id AND w.user_id = u.id AND s.enabled = 1
+                    WHERE w.post_id = p.id AND p.layer_id = l.id AND l.site_id = s.id AND w.user_id = u.id AND (s.enabled = 1 OR s.enabled = 't')
                       AND %s" % [joins * ' ', conditions]
                       
             res = find_by_sql(sqlq)
@@ -303,7 +305,7 @@ module Hoodwinkd::Models
                     hoodwinkd_winks w, hoodwinkd_winks w2, hoodwinkd_users u
                 WHERE p.layer_id = l.id AND l.site_id = s.id AND w.post_id = p.id 
                     AND w2.id = p.last_wink_id AND w2.user_id = u.id
-                    AND s.id #{meta ? 'IN' : 'NOT IN'} (164, 295) AND s.enabled = 1
+                    AND s.id #{meta ? 'IN' : 'NOT IN'} (164, 295) AND (s.enabled = 1 OR s.enabled = 't')
                 GROUP BY p.id ORDER BY max_date DESC LIMIT 18
             }
         end

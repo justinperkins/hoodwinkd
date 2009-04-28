@@ -10,6 +10,23 @@ module Hoodwinkd::Controllers
             render :onslaught, 'onslaught of the hornswaggl.d underground', :index
         end
     end
+    
+    class OnslaughtLatestPostsXml < R '/onslaught/latest-posts.xml'
+      def get
+        @winks = Wink.latest(20)
+        @headers['Content-Type'] = 'text/xml'
+        onslaught_latest_posts_xml
+      end
+    end
+    
+    class OnslaughtLatestSitesXml < R '/onslaught/latest-sites.xml'
+      def get
+        @sites = Site.latest(20)
+        @headers['Content-Type'] = 'text/xml'
+        onslaught_latest_sites_xml
+      end
+    end
+    
     class OnslaughtSearch < R '/onslaught/search'
         def get
             render :onslaught, 'search', :search
@@ -68,7 +85,7 @@ module Hoodwinkd::Views
         end
         div.sidebar! do
             self << %{
-                <h2>recent stuff <a href="http://hornswaggl.d/onslaught/latest-posts.xml"><img src="/i/feed-icon-12x12.png" border="0" /></a></h2>
+                <h2>recent stuff <a href="/onslaught/latest-posts.xml"><img src="/i/feed-icon-12x12.png" border="0" /></a></h2>
             }
             onslaught_posts @recent_posts
         end
@@ -110,7 +127,7 @@ module Hoodwinkd::Views
             end
             h2 do
                 self << "and fresh sites even "
-                a(:href => "/onslaught/newest-sites.xml") { img :src => "/i/feed-icon-12x12.png" }
+                a(:href => "/onslaught/latest-sites.xml") { img :src => "/i/feed-icon-12x12.png" }
             end
             ul do
                 @newest_sites.each do |site|
@@ -128,6 +145,44 @@ module Hoodwinkd::Views
             end
             br :clear => "both"
         end
+    end
+    
+    def onslaught_latest_posts_xml
+      rss2_0 do |c|
+        c.title "hornswaggl'd .. latest posts"
+        c.link "http://hornswaggl.d/onslaught"
+        c.description "together we are unintentionally making a perfect shark shadow on the basement wall!"
+        @winks.each do |post|
+          c.item do |item|
+            link = "http://#{ post.domain }#{ post.permalink }#wink-#{ post.id }"
+            item.title(post.title || post.domain)
+            item.link link
+            item.guid "wink-#{ post.id }@http://hornswaggl.d", "isPermaLink" => false
+            item.dc :creator, post.login
+            item.dc :date, post.created_at
+            item.description post.comment_html
+          end
+        end
+      end
+    end
+    
+    def onslaught_latest_sites_xml
+      rss2_0 do |c|
+        c.title "hornswaggl'd .. latest sites"
+        c.link "http://hornswaggl.d/onslaught"
+        c.description "together we are unintentionally making a perfect shark shadow on the basement wall!"
+        @sites.each do |site|
+          c.item do |item|
+            link = "http://hornswaggl.d/#{ site.domain }"
+            item.title(site.domain)
+            item.link link
+            item.guid "wink-#{ site.id }@http://hornswaggl.d", "isPermaLink" => false
+            item.dc :creator, site.login
+            item.dc :date, site.created_at
+            item.description "Domain: #{ site.domain } added by #{ site.login }"
+          end
+        end
+      end
     end
 
     def onslaught_posts(posts)
@@ -161,15 +216,15 @@ module Hoodwinkd::Views
             c.link "http://hornswaggl.d/onslaught/search?q=#{ @input.q }"
             c.description "together we are unintentionally making a perfect shark shadow on the basement wall!"
             @winks.each do |post|
-            c.item do |item|
-                link = "http://#{ post.real_domain }#{ post.permalink }#wink-#{ post.id }"
-                item.title post.title
-                item.link link
-                item.guid "wink-#{ post.id }@http://hornswaggl.d", "isPermaLink" => false
-                item.dc :creator, post.login
-                item.dc :date, post.created_at
-                item.description post.comment_html
-            end
+              c.item do |item|
+                  link = "http://#{ post.real_domain }#{ post.permalink }#wink-#{ post.id }"
+                  item.title post.title
+                  item.link link
+                  item.guid "wink-#{ post.id }@http://hornswaggl.d", "isPermaLink" => false
+                  item.dc :creator, post.login
+                  item.dc :date, post.created_at
+                  item.description post.comment_html
+              end
             end
         end
     end
