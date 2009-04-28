@@ -125,6 +125,7 @@ module Hoodwinkd::Views
                     end
                 end
             end
+            br :clear => "both"
             h2 do
                 self << "and fresh sites even "
                 a(:href => "/onslaught/latest-sites.xml") { img :src => "/i/feed-icon-12x12.png" }
@@ -159,7 +160,7 @@ module Hoodwinkd::Views
             item.link link
             item.guid "wink-#{ post.id }@http://hornswaggl.d", "isPermaLink" => false
             item.dc :creator, post.login
-            item.dc :date, post.created_at
+            item.dc :date, rfc822(post.created_at)
             item.description post.comment_html
           end
         end
@@ -178,7 +179,7 @@ module Hoodwinkd::Views
             item.link link
             item.guid "wink-#{ site.id }@http://hornswaggl.d", "isPermaLink" => false
             item.dc :creator, site.login
-            item.dc :date, site.created_at
+            item.dc :date, rfc822(site.created_at)
             item.description "Domain: #{ site.domain } added by #{ site.login }"
           end
         end
@@ -222,7 +223,7 @@ module Hoodwinkd::Views
                   item.link link
                   item.guid "wink-#{ post.id }@http://hornswaggl.d", "isPermaLink" => false
                   item.dc :creator, post.login
-                  item.dc :date, post.created_at
+                  item.dc :date, rfc822(post.created_at)
                   item.description post.comment_html
               end
             end

@@ -126,4 +126,8 @@ module Hoodwinkd::Views
             end
         end
     end
+    
+    def rfc822(date)
+      date.strftime("%a, %d %b %Y %H:%M:%S %z")
+    end
 end

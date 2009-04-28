@@ -134,7 +134,7 @@ module Hoodwinkd::Models
                 SELECT s.*, u.login AS login
                 FROM hoodwinkd_sites s
                 JOIN hoodwinkd_users u ON u.id = s.creator_id
-                WHERE (s.enabled = 1 OR s.enabled = 't') AND s.created_at >= '#{ (Time.now - (24*60*60)).to_s(:db) }'
+                WHERE (s.enabled = 1 OR s.enabled = 't')
                 ORDER BY s.created_at DESC LIMIT #{count.to_i}
             }
         end
