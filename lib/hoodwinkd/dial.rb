@@ -9,6 +9,9 @@ module Hoodwinkd::Controllers
             @layer ||= Layer.new(:name => 'Root')
         end
         def get(domain)
+            # for those who type in this URL directly without being logged in
+            redirect(DialHome) unless @state.user_id
+
             self.load(domain)
             render :dial, "editing #{domain}", :site
         end
